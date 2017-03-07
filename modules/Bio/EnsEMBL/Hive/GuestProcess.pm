@@ -479,6 +479,7 @@ sub life_cycle {
     $self->print_debug("LIFE_CYCLE");
 
     my $job = $self->input_job();
+    my $attempt = $self->attempt();
     my $partial_stopwatch = Bio::EnsEMBL::Hive::Utils::Stopwatch->new();
     my %job_partial_timing = ();
 
@@ -506,7 +507,7 @@ sub life_cycle {
         $self->print_debug("processing event '$event'");
 
         if ($event eq 'JOB_STATUS_UPDATE') {
-            $job_partial_timing{$job->status} = $partial_stopwatch->get_elapsed() if ($job->status ne 'READY') and ($job->status ne 'CLAIMED');
+            $job_partial_timing{$attempt->status} = $partial_stopwatch->get_elapsed() if ($attempt->status ne 'INITIALIZATION');
             $self->enter_status(uc $content);
             $partial_stopwatch->restart();
             $self->send_response('OK');

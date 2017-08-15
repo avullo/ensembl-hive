@@ -326,12 +326,12 @@ CREATE TABLE resource_description (
 @column input_id                input data passed into Analysis:RunnableDB to control the work
 @column param_id_stack          a CSV of job_ids whose input_ids contribute to the stack of local variables for the job
 @column accu_id_stack           a CSV of job_ids whose accu's contribute to the stack of local variables for the job
+@column when_created		When the job was created (not when it first run !)
 @column role_id                 links to the Role that claimed this job (NULL means it has never been claimed)
+@column last_attempt_id		Reference to the attempt table. the last attempt recorded for this job (can be NULL if the job has never run)
 @column status                  state the job is in
 @column retry_count             number times job had to be reset when worker failed to run it
 @column when_completed          when the job was completed
-@column runtime_msec            how long did it take to execute the job (or until the moment it failed)
-@column query_count             how many SQL queries were run during this job
 @column controlled_semaphore_id the dbID of the semaphore that is controlled by this job (and whose counter it will decrement by 1 upon successful completion)
 */
 
@@ -361,24 +361,19 @@ CREATE TABLE job (
 
 @colour #1D73DA
 
-@desc The job table is the heart of this system.  It is the kiosk or blackboard
-    where workers find things to do and then post work for other works to do.
-    These jobs are created prior to work being done, are claimed by workers,
-    are updated as the work is done, with a final update on completion.
+@desc The attempt table records all the attempts ever made on the jobs
 
-@column job_id                  autoincrement id
-@column prev_job_id             previous job which created this one
-@column analysis_id             the analysis_id needed to accomplish this job.
-@column input_id                input data passed into Analysis:RunnableDB to control the work
-@column param_id_stack          a CSV of job_ids whose input_ids contribute to the stack of local variables for the job
-@column accu_id_stack           a CSV of job_ids whose accu's contribute to the stack of local variables for the job
-@column role_id                 links to the Role that claimed this job (NULL means it has never been claimed)
+@column attempt_id              autoincrement id
+@column role_id                 links to the Role that claimed (run) this attempt
+@column job_id                  the job this attempt is about
+@column retry_index             The number of previous attempts of this job
 @column status                  state the job is in
-@column retry_count             number times job had to be reset when worker failed to run it
-@column when_completed          when the job was completed
+@column when_initialized        when the attempt was initialized (i.e. the job was claimed)
+@column when_updated            when the attempt status was last updated
 @column runtime_msec            how long did it take to execute the job (or until the moment it failed)
 @column query_count             how many SQL queries were run during this job
-@column controlled_semaphore_id the dbID of the semaphore that is controlled by this job (and whose counter it will decrement by 1 upon successful completion)
+@column stdout_file             path to the job's STDOUT log
+@column stderr_file            path to the job's STDERR log
 */
 
 CREATE TABLE attempt (
@@ -659,6 +654,7 @@ CREATE TABLE worker_resource_usage (
 
 @column log_message_id  an autoincremented primary id of the message
 @column         job_id  the id of the job that threw the message (or NULL if it was outside of a message)
+@column     attempt_id  the id of the attempt that threw the message (or NULL if it was outside of a message)
 @column        role_id  the 'current' role
 @column      worker_id  the 'current' worker
 @column   beekeeper_id  beekeeper that generated this message

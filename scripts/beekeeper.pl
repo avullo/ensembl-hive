@@ -585,7 +585,7 @@ sub run_autonomously {
                                             . ' -preregistered';
 
                     my $meadow_process_ids = $this_meadow->submit_workers_return_meadow_pids(
-                        $specific_worker_cmd, $this_meadow_rc_worker_count, $iteration, $rc_name, $submission_cmd_args || '', $submit_log_subdir);
+                        $specific_worker_cmd, $this_meadow_rc_worker_count, $self->{'beekeeper_id'}.'_'.$iteration, $rc_name, $submission_cmd_args || '', $submit_log_subdir);
 
                     warn "Submitted the following process_ids to ".$this_meadow->signature.": ".join(', ', @$meadow_process_ids)."\n";
 

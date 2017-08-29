@@ -40,6 +40,7 @@ RUN mkdir /repo && git clone -b experimental/dswarm https://github.com/Ensembl/e
 # Install the missing dependencies (if any)
 RUN cpanm --installdeps --with-recommends /repo/ensembl-hive
 
+ENV EHIVE_ROOT_DIR "/repo/ensembl-hive"
 ENV PATH "/repo/ensembl-hive/scripts:$PATH"
 ENV PERL5LIB "/repo/ensembl-hive/modules:$PERL5LIB"
 

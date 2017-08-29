@@ -35,7 +35,7 @@ RUN apt-get update -y \
 
 RUN ln -s /usr/bin/mariadb_config /usr/bin/mysql_config
 
-RUN mkdir /repo && git clone -b master https://github.com/Ensembl/ensembl-hive.git /repo/ensembl-hive
+RUN mkdir /repo && git clone -b dswarm https://github.com/Ensembl/ensembl-hive.git /repo/ensembl-hive
 
 # Install the missing dependencies (if any)
 RUN cpanm --installdeps --with-recommends /repo/ensembl-hive

@@ -91,6 +91,7 @@ Developer documentation
 
 .. toctree::
 
+   dev/docker_swarm.rst
    dev/release_checklist
 
 

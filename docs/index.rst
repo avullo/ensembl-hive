@@ -72,6 +72,7 @@ User documentation
    advanced_usage/mpi
    advanced_usage/slack
    advanced_usage/continuous_pipelines
+   advanced_usage/docker_swarm.rst
 
 
 .. toctree::
